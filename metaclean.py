@@ -2,6 +2,10 @@
 METACLEAN uses exiftool and qpdf to remove metadata permanently and unrecoverable.
 """
 
+"""
+FEEDBACK MODE
+"""
+
 import argparse
 import subprocess
 import os
