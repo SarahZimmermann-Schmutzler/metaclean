@@ -7,14 +7,14 @@ import subprocess
 import os
 
 
-def remove_pdf_metadata(input_output_pdf: str) -> None:
+def remove_pdf_metadata(target_file: str) -> None:
     """
     1) Removes all metadata from a PDF file and creates a temporary workcopy of it with `ExifTool`
     2) Restructures the data of the workcopy with the process of Linearization, so the data cannot be restored, and saves it under the original name with `QPDF`.
     3) Removes the temporary workcopy.
 
     Args:
-        input_output_pdf (str): The file path to the input PDF file, which will be overwritten
+        target_file (str): The file path to the input PDF file, which will be overwritten
                                 with the metadata-free version.
 
     Raises:
@@ -23,13 +23,14 @@ def remove_pdf_metadata(input_output_pdf: str) -> None:
     """
     try:
         temp_pdf = "temp.pdf"
-        print(f"Remove metadate from {input_output_pdf} with ExifTool...")
-        exiftool_command = ["exiftool", "-all=", input_output_pdf, "-o", temp_pdf]
+        print(f"Remove metadate from {target_file} with ExifTool...")
+        exiftool_command = ["exiftool", "-all=", target_file, "-o", temp_pdf]
         subprocess.run(exiftool_command, check=True)
         print("Metadata removed sucessfully.")
+        #consideration: write temporary files to /tmp/<filename> (directory that exists in all linux/*nix based OSes) since this directory will be cleaned when powercycling a machine, e.g. server, laptop, etc.
 
-        print(f"Restructure {input_output_pdf} with QPDF...")
-        qpdf_command = ["qpdf", "--linearize", temp_pdf, input_output_pdf]
+        print(f"Restructure {target_file} with QPDF...")
+        qpdf_command = ["qpdf", "--linearize", temp_pdf, target_file]
         subprocess.run(qpdf_command, check=True)
         print(f"PDF sucessfully reconstructured.")
 
@@ -69,11 +70,11 @@ def main() -> None:
     """
     parser = argparse.ArgumentParser(description="Remove metadata from pdf files permanently and unrecoverable.")
     
-    parser.add_argument("input_output_pdf", help="Path to input PDF file")
+    parser.add_argument("target_file", help="Path to input PDF file")
     
     args = parser.parse_args()
 
-    remove_pdf_metadata(args.input_output_pdf)
+    remove_pdf_metadata(args.target_file)
 
 if __name__ == "__main__":
     main()
