@@ -62,7 +62,7 @@ def main() -> None:
 
     Usage:
         Run this script from the command line with the file path as an argument.
-        Example: `python script_name.py example.pdf`
+        Example: `python metaclean.py example.pdf`
 
     Raises:
         SystemExit: If invalid arguments are provided (e.g., missing or incorrect path)
